@@ -5,9 +5,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+
 import { Task } from './task.model';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { StatusHttp } from 'src/type';
+
+import { StatusHttp } from 'src/types';
 
 @Injectable()
 export class TasksService {
@@ -48,6 +50,18 @@ export class TasksService {
     return {
       status: HttpStatus,
       message: 'Task delete',
+    };
+  }
+
+  async checkAllTasks(status: boolean): Promise<StatusHttp> {
+    const [result] = await this.TaskRepository.update(
+      { isChecked: status },
+      { where: { isChecked: !status } },
+    );
+    if (!result) throw new BadRequestException(`Not find no completed tasks`);
+    return {
+      status: HttpStatus,
+      message: 'Ok',
     };
   }
 }

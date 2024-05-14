@@ -1,12 +1,12 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    queryInterface.createTable('Tasks', {
+    return queryInterface.createTable('Tasks', {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
-      textTask: {
+      text: {
         type: Sequelize.STRING,
         allowNull: false,
         validate: {
@@ -33,6 +33,6 @@ module.exports = {
   },
 
   down: (queryInterface) => {
-    queryInterface.dropTable('Tasks');
+    return queryInterface.dropTable('Tasks');
   },
 };
