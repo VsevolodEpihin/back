@@ -8,57 +8,60 @@ import { InjectModel } from '@nestjs/sequelize';
 
 import { Task } from './task.model';
 import { CreateTaskDto } from './dto/create-task.dto';
-
-import { StatusHttp } from 'src/types';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Injectable()
 export class TasksService {
-  constructor(@InjectModel(Task) private TaskRepository: typeof Task) {}
-  async createTask(dto: CreateTaskDto) {
-    return await this.TaskRepository.create(dto);
+  constructor(
+    @InjectModel(Task) private readonly taskRepository: typeof Task,
+  ) {}
+
+  createTask(dto: CreateTaskDto) {
+    return this.taskRepository.create(dto);
   }
 
-  async getAllTasks() {
-    return await this.TaskRepository.findAll({ order: [['id', 'ASC']] });
+  getAllTasks() {
+    return this.taskRepository.findAll({ order: [['id', 'ASC']] });
   }
 
-  async updateTask(id: number, dto) {
-    const [index, [task]] = await this.TaskRepository.update(dto, {
+  async updateTask(id: number, dto: UpdateTaskDto) {
+    const [index, [task]] = await this.taskRepository.update(dto, {
       where: { id },
       returning: true,
     });
-    if (!index) throw new NotFoundException('tasks not found');
+    if (index === 0) throw new NotFoundException('tasks not found');
     return task;
   }
 
-  async deleteAllCompleted(): Promise<StatusHttp> {
-    const tasks = await this.TaskRepository.destroy({
+  async deleteAllCompleted() {
+    const tasks = await this.taskRepository.destroy({
       where: { isChecked: true },
     });
-    if (!tasks) throw new BadRequestException('No completed tasks');
+    if (tasks === 0) throw new BadRequestException('No completed tasks');
     return {
       status: HttpStatus,
       message: 'Ok',
     };
   }
 
-  async deleteCurrentTask(id: number): Promise<StatusHttp> {
-    const task = await this.TaskRepository.destroy({
+  async deleteCurrentTask(id: number) {
+    const task = await this.taskRepository.destroy({
       where: { id },
     });
-    if (!task) throw new BadRequestException('find not task');
+    if (task === 0) throw new BadRequestException('find not task');
     return {
       status: HttpStatus,
       message: 'Task delete',
     };
   }
 
-  async checkAllTasks(status: boolean): Promise<StatusHttp> {
-    const [result] = await this.TaskRepository.update(
+  async checkAllTasks(status: boolean) {
+    const [result] = await this.taskRepository.update(
       { isChecked: status },
       { where: { isChecked: !status } },
     );
-    if (!result) throw new BadRequestException(`Not find no completed tasks`);
+    if (result === 0)
+      throw new BadRequestException(`Not find no completed tasks`);
     return {
       status: HttpStatus,
       message: 'Ok',

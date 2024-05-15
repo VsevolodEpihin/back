@@ -1,5 +1,4 @@
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-
 import {
   Body,
   Controller,
@@ -52,16 +51,16 @@ export class TasksController {
   @ApiResponse({ status: 200, type: Task })
   @Patch(':id')
   async updateOneTask(
-    @Param('id', ParseIntPipe) _id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateTaskDto: UpdateTaskDto,
   ) {
-    return await this.tasksService.updateTask(_id, updateTaskDto);
+    return await this.tasksService.updateTask(id, updateTaskDto);
   }
 
   @ApiOperation({ summary: 'отметить все задачи' })
   @ApiResponse({ status: 200, type: Task })
   @Put()
-  CheckAllTasks(@Body('status') status: boolean) {
+  checkAllTasks(@Body('status') status: boolean) {
     return this.tasksService.checkAllTasks(status);
   }
 }

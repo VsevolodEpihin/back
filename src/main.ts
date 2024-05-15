@@ -17,7 +17,7 @@ async function start() {
   const document = SwaggerModule.createDocument(app, config);
   const config_service = app.get(ConfigService);
   SwaggerModule.setup('/api/docs', app, document);
-  app.enableCors({ origin: config_service.get('ORIGIN') });
+  app.enableCors({ origin: config_service.get('CLIENT') });
   await app.listen(config_service.get('PORT'));
 }
 
