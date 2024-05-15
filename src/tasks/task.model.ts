@@ -10,7 +10,10 @@ import {
 
 @Table
 export class Task extends Model<Task> {
-  @ApiProperty({ example: 'text todo', description: 'Текст задачи' })
+  @ApiProperty({
+    example: 'text todo',
+    description: 'Текст задачи',
+  })
   @Column({
     allowNull: false,
   })
