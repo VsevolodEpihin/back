@@ -1,4 +1,9 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
 import { Task } from './task.model';
@@ -29,49 +34,35 @@ export class TasksService {
     return task;
   }
 
-  async deleteAllCompleted(): Promise<StatusHttp> {
+  async deleteAllCompleted(): Promise<StatusHttp | never> {
     const tasks = await this.taskRepository.destroy({
       where: { isChecked: true },
     });
-    if (tasks === 0) {
-      return {
-        status: HttpStatus,
-        message: 'completed tasks not found',
-      };
-    }
+    if (tasks === 0) throw new BadRequestException('No completed tasks');
     return {
       status: HttpStatus,
       message: 'Ok',
     };
   }
 
-  async deleteCurrentTask(id: number): Promise<StatusHttp> {
+  async deleteCurrentTask(id: number): Promise<StatusHttp | never> {
     const task = await this.taskRepository.destroy({
       where: { id },
     });
-    if (task === 0) {
-      return {
-        status: HttpStatus,
-        message: 'Task not found',
-      };
-    }
+    if (task === 0) throw new BadRequestException('No found task');
     return {
       status: HttpStatus,
       message: 'Task delete',
     };
   }
 
-  async checkAllTasks(status: boolean): Promise<StatusHttp> {
+  async checkAllTasks(status: boolean): Promise<StatusHttp | never> {
     const [result] = await this.taskRepository.update(
       { isChecked: status },
       { where: { isChecked: !status } },
     );
-    if (result === 0) {
-      return {
-        status: HttpStatus,
-        message: 'tasks not found',
-      };
-    }
+    if (result === 0)
+      throw new BadRequestException(`Not find no completed tasks`);
     return {
       status: HttpStatus,
       message: 'Ok',
