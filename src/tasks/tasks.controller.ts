@@ -22,39 +22,39 @@ export class TasksController {
   @ApiOperation({ summary: 'создание задачи' })
   @ApiResponse({ status: 200, type: Task })
   @Post()
-  async createTask(@Body() taskDto: CreateTaskDto) {
-    return await this.tasksService.createTask(taskDto);
+  createTask(@Body() taskDto: CreateTaskDto) {
+    return this.tasksService.createTask(taskDto);
   }
 
   @ApiOperation({ summary: 'Получение всех задач' })
   @ApiResponse({ status: 200, type: [Task] })
   @Get()
-  async getAllTasks() {
-    return await this.tasksService.getAllTasks();
+  getAllTasks() {
+    return this.tasksService.getAllTasks();
   }
 
   @ApiOperation({ summary: 'удаление решенных задач' })
   @ApiResponse({ status: 200, type: Task })
   @Delete('completed')
-  async deleteAllCompleted() {
-    return await this.tasksService.deleteAllCompleted();
+  deleteAllCompleted() {
+    return this.tasksService.deleteAllCompleted();
   }
 
   @ApiOperation({ summary: 'удаление задачи' })
   @ApiResponse({ status: 200, type: Task })
   @Delete(':id')
-  async deleteOneTask(@Param('id', ParseIntPipe) id: number) {
-    return await this.tasksService.deleteCurrentTask(id);
+  deleteOneTask(@Param('id', ParseIntPipe) id: number) {
+    return this.tasksService.deleteCurrentTask(id);
   }
 
   @ApiOperation({ summary: 'изменение задачи' })
   @ApiResponse({ status: 200, type: Task })
   @Patch(':id')
-  async updateOneTask(
+  updateOneTask(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateTaskDto: UpdateTaskDto,
   ) {
-    return await this.tasksService.updateTask(id, updateTaskDto);
+    return this.tasksService.updateTask(id, updateTaskDto);
   }
 
   @ApiOperation({ summary: 'отметить все задачи' })
