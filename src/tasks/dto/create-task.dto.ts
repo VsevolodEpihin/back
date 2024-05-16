@@ -1,10 +1,10 @@
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsString, Matches, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 import { createTransformParams } from '../../utils/util-dto';
+
 export class CreateTaskDto {
   @IsString()
-  @Matches(/^[^"№%:?*]+$/)
   @Transform(createTransformParams)
   @IsNotEmpty()
   @MaxLength(255)
